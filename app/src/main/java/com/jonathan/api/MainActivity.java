@@ -1,18 +1,14 @@
 package com.jonathan.api;
 
-import Modelo.ResponseBody;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
 
 import Interface.JsonPlaceHolderApi;
 import Modelo.Posts;
+import Modelo.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,23 +47,20 @@ public class MainActivity extends AppCompatActivity {
                     mJsonTxtView.setText("Codigo: "+response.code());
 
                     ResponseBody responseBody = response.body();
-                     boolean succes = responseBody.getSuccess();
+                    boolean succes = responseBody.getSuccess();
 
-                     if(succes)
-                     {
-                         String message = responseBody.getMessage();
-                         Log.d("Respuesta", message);
-                     }
+                    if(succes)
+                    {
+                        String message = responseBody.getMessage();
+                        Log.d("Respuesta", message);
+                        mJsonTxtView.setText(responseBody.getMessage());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
-
-
-
     }
 }
