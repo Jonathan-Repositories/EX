@@ -1,5 +1,6 @@
 package com.jonathan.api;
 
+import Modelo.ResponseBody;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.nfc.Tag;
@@ -41,34 +42,32 @@ public class MainActivity extends AppCompatActivity {
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<Posts> call = jsonPlaceHolderApi.getPosts();
-
-        call.enqueue(new Callback<Posts>() {
+        Call<ResponseBody> call = jsonPlaceHolderApi.getPosts(new Posts());
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Posts> call, Response<Posts> response) {
-
-                if(!response.isSuccessful()){
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful())
+                {
                     mJsonTxtView.setText("Codigo: "+response.code());
-                    return;
+
+                    ResponseBody responseBody = response.body();
+                     boolean succes = responseBody.getSuccess();
+
+                     if(succes)
+                     {
+                         String message = responseBody.getMessage();
+                         Log.d("Respuesta", message);
+                     }
                 }
-
-                Posts postsList = response.body();
-
-                    String content = "";
-                    content += "userId: "+ postsList.getUserId() + "\n";
-                    content += "env: "+ postsList.getEnv() + "\n";
-                    content += "os:"+ postsList.getOs() + "\n";
-                    mJsonTxtView.append(content);
-                Toast.makeText(getApplicationContext(),""+response.code(),Toast.LENGTH_LONG).show();
-                Log.e("HttpClient", "codigo: " + response.code());
-                postsList
             }
 
             @Override
-            public void onFailure(Call<Posts> call, Throwable t) {
-                mJsonTxtView.setText(t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
+
+
 
     }
 }
